@@ -1,3 +1,4 @@
+DROP database if exists employee_tracker;
 CREATE database employee_tracker;
 USE employee_tracker;
 
