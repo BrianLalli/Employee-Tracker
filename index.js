@@ -133,6 +133,14 @@ const createNewEmployee = () => {
     });
 };
 const createNewRole = () => {
+  db.query("SELECT * FROM department;", [], (err, result) => {
+    const departmentList = result.map((e) => {
+      return {
+        name: e.name,
+        value: e.id,
+      };
+    })
+  
   console.log("Create new role");
   inquirer
     .prompt([
@@ -147,9 +155,10 @@ const createNewRole = () => {
         message: "What is the salary of the new role?",
       },
       {
-        type: "input",
+        type: "list",
         name: "department_id",
-        message: "What is the department id of the new role?",
+        message: "What department is this role in?",
+        choices: departmentList
       },
     ])
     .then((answer) => {
@@ -161,48 +170,93 @@ const createNewRole = () => {
           mainMenu();
         }
       );
-    });
-};
-const updateRole = () => {
-  db.query("SELECT * FROM employee;", [], (err, result) => {
-    const employeeList = result.map((e) => {
-      return {
-        name: e.first_name + " " + e.last_name,
-        value: e.id,
-      };
-    });
+    })
+  })
+}
 
-    console.log("Update employee role");
-    inquirer
-      .prompt([
-        // {
-        //   type: "input",
-        //   name: "employee_id",
-        //   message: "What is the id of the employee you want to update?",
-        // },
-        {
-          type: "list",
-          name: "employee_id",
-          message: "What is the id of the employee you want to update?",
-          choices: employeeList,
-        },
-        {
-          type: "input",
-          name: "role_id",
-          message: "What is the new role id for this employee?",
-        },
-      ])
-      .then((answer) => {
-        db.query(
-          "UPDATE employee SET role_id = (?) where id = (?);",
-          [answer.role_id, answer.employee_id],
-          (err, result) => {
-            console.log("Successfully updated employee!");
-            mainMenu();
-          }
-        );
+    const updateRole = () => {
+      db.query("SELECT * FROM employee;", [], (err, result) => {
+        const employeeList = result.map((e) => {
+          return {
+            name: e.first_name + " " + e.last_name,
+            value: e.id,
+          };
+        });
+    
+        console.log("Update employee role");
+        inquirer
+          .prompt([
+            // {
+            //   type: "input",
+            //   name: "employee_id",
+            //   message: "What is the id of the employee you want to update?",
+            // },
+            {
+              type: "list",
+              name: "employee_id",
+              message: "What is the id of the employee you want to update?",
+              choices: employeeList,
+            },
+            {
+              type: "input",
+              name: "role_id",
+              message: "What is the new role id for this employee?",
+            },
+          ])
+          .then((answer) => {
+            db.query(
+              "UPDATE employee SET role_id = (?) where id = (?);",
+              [answer.role_id, answer.employee_id],
+              (err, result) => {
+                console.log("Successfully updated employee!");
+                mainMenu();
+              }
+            );
+          });
       });
-  });
 };
+
+
+// const updateRole = () => {
+//   db.query("SELECT * FROM employee;", [], (err, result) => {
+//     const employeeList = result.map((e) => {
+//       return {
+//         name: e.first_name + " " + e.last_name,
+//         value: e.id,
+//       };
+//     });
+
+//     console.log("Update employee role");
+//     inquirer
+//       .prompt([
+//         // {
+//         //   type: "input",
+//         //   name: "employee_id",
+//         //   message: "What is the id of the employee you want to update?",
+//         // },
+//         {
+//           type: "list",
+//           name: "employee_id",
+//           message: "What is the id of the employee you want to update?",
+//           choices: employeeList,
+//         },
+//         {
+//           type: "input",
+//           name: "role_id",
+//           message: "What is the new role id for this employee?",
+//         },
+//       ])
+//       .then((answer) => {
+//         db.query(
+//           "UPDATE employee SET role_id = (?) where id = (?);",
+//           [answer.role_id, answer.employee_id],
+//           (err, result) => {
+//             console.log("Successfully updated employee!");
+//             mainMenu();
+//           }
+//         );
+//       });
+//   });
+// };
 
 mainMenu();
