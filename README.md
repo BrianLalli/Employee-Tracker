@@ -21,7 +21,6 @@ The task was to build a command-line application from scratch to manage a compan
 
 [Console.Table](https://www.npmjs.com/package/console.table)
 
-
 <br>
 
 ## MIT License:
